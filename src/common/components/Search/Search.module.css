@@ -1,0 +1,111 @@
+.search {
+    width: 100%;
+}
+
+.searchContainer {
+    display: flex;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    padding: 8px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.searchContainer:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(1, 180, 228, 0.6);
+    box-shadow: 0 8px 32px rgba(1, 180, 228, 0.3);
+    transform: translateY(-2px);
+}
+
+.searchInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    color: #ffffff;
+    border-radius: 50px;
+    width: 100%;
+}
+
+.searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.searchButton {
+    background: linear-gradient(45deg, #01b4e4, #90cea1);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(1, 180, 228, 0.3);
+    min-width: 140px;
+}
+
+.searchButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(1, 180, 228, 0.5);
+}
+
+.searchButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.searchButton:disabled {
+    background: linear-gradient(45deg, #666, #888);
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: none;
+}
+
+/* Стили для светлой темы */
+:global(.lightTheme) .searchContainer {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+:global(.lightTheme) .searchInput {
+    color: #333333;
+}
+
+:global(.lightTheme) .searchInput::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+:global(.lightTheme) .searchContainer:focus-within {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(1, 180, 228, 0.6);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .searchContainer {
+        flex-direction: column;
+        border-radius: 25px;
+        gap: 10px;
+    }
+
+    .searchInput {
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        border-radius: 25px;
+    }
+
+    .searchButton {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 25px;
+        min-width: auto;
+    }
+}

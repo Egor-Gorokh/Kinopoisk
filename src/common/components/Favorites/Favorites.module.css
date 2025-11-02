@@ -1,0 +1,242 @@
+.favorites {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #01b4e4, #90cea1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
+}
+
+.emptyIcon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+}
+
+.emptyTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.emptyText {
+    color: #e3e3e3;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Стили для сетки фильмов когда есть избранные */
+.moviesGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.movieCard {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    cursor: pointer;
+}
+
+.movieCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(1, 180, 228, 0.3);
+    border-color: rgba(1, 180, 228, 0.3);
+}
+
+.movieImage {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    background: linear-gradient(45deg, #1a1a2e, #16213e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.favoriteButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.favoriteButton:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.1);
+}
+
+.heartIcon {
+    font-size: 1rem;
+    color: white;
+}
+
+.movieInfo {
+    padding: 1rem;
+}
+
+.movieTitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #ffffff;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.movieOriginalTitle {
+    font-size: 0.8rem;
+    color: #90cea1;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.movieRating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ratingStars {
+    color: #ffd700;
+    font-size: 0.8rem;
+}
+
+.ratingValue {
+    color: #e3e3e3;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+/* Стили для светлой темы */
+:global(.lightTheme) .emptyState {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:global(.lightTheme) .emptyTitle {
+    color: #333333;
+}
+
+:global(.lightTheme) .emptyText {
+    color: #666666;
+}
+
+:global(.lightTheme) .movieCard {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:global(.lightTheme) .movieTitle {
+    color: #333333;
+}
+
+:global(.lightTheme) .ratingValue {
+    color: #333333;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .moviesGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .favorites {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .moviesGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .movieImage {
+        height: 200px;
+    }
+
+    .emptyState {
+        padding: 2rem 1rem;
+    }
+
+    .emptyIcon {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .moviesGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Анимация появления */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.movieCard {
+    animation: fadeInUp 0.6s ease-out;
+}

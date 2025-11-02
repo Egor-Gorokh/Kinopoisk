@@ -1,0 +1,58 @@
+.footer {
+    border-top: 1px solid;
+    padding: 2rem 1rem;
+    text-align: center;
+    margin-top: auto;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Темная тема для footer */
+:global(.darkTheme) .footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Светлая тема для footer */
+:global(.lightTheme) .footer {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.footerContent {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+}
+
+:global(.darkTheme) .footerContent {
+    color: #e3e3e3;
+}
+
+:global(.lightTheme) .footerContent {
+    color: #333333;
+}
+
+.footerContent a {
+    color: #01b4e4;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footerContent a:hover {
+    color: #90cea1;
+    text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .footer {
+        padding: 1.5rem 1rem;
+    }
+
+    .footerContent {
+        font-size: 0.8rem;
+    }
+}
