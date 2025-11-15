@@ -513,23 +513,50 @@
     --skeleton-shine: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .skeletonContent {
-        flex-direction: column;
-    }
 
-    .skeletonSidebar {
-        width: 100%;
-    }
 
-    .skeletonTitle {
-        height: 32px;
-        width: 200px;
-    }
+.skeletonTitle {
+    height: 40px;
+    width: 300px;
+    background: var(--skeleton-bg);
+    border-radius: 8px;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
 
-    .skeletonResults {
-        height: 20px;
-        width: 120px;
+.skeletonResults {
+    height: 24px;
+    width: 150px;
+    background: var(--skeleton-bg);
+    border-radius: 4px;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeletonContent {
+    display: flex;
+    gap: 2rem;
+}
+
+.skeletonFilterSection {
+    height: 120px;
+    background: var(--skeleton-bg);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0%, 100% {
+        opacity: 1;
     }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+:root {
+    --skeleton-bg: #f0f0f0;
+}
+
+:global(.dark) {
+    --skeleton-bg: #2a2a2a;
 }

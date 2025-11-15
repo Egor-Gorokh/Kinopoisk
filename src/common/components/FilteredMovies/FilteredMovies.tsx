@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGetTopRatedMoviesQuery } from '../../../features/movies/api/moviesApi.ts';
 import { toggleFavorite as toggleFavoriteAction } from "../../../features/favorites/favoritesSlice.ts";
 import {useDispatch} from "react-redux";
+import {MovieCardSkeleton} from "../Skeletons/MovieCardSkeleton.tsx";
 
 
 interface Movie {
@@ -355,10 +356,28 @@ export const FilteredMovies = () => {
         );
     });
 
+
     if (isLoading && allMovies.length === 0) {
         return (
             <div className={s.filteredMovies}>
-                <div className={s.loading}>Loading movies...</div>
+                <div className={s.header}>
+                    <div className={s.skeletonTitle}></div>
+                    <div className={s.skeletonResults}></div>
+                </div>
+
+                <div className={s.skeletonContent}>
+                    <div className={s.filtersSidebar}>
+                        <div className={s.skeletonFilterSection}></div>
+                        <div className={s.skeletonFilterSection}></div>
+                        <div className={s.skeletonFilterSection}></div>
+                    </div>
+
+                    <div className={s.moviesGrid}>
+                        {Array.from({ length: 12 }).map((_, index) => (
+                            <MovieCardSkeleton key={index} />
+                        ))}
+                    </div>
+                </div>
             </div>
         );
     }
@@ -372,6 +391,7 @@ export const FilteredMovies = () => {
     }
 
     return (
+
         <div className={s.filteredMovies}>
             <div className={s.header}>
                 <h1 className={s.title}>Filtered Movies</h1>

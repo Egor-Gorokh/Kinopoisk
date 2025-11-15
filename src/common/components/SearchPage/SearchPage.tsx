@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search } from '../Search/Search.tsx';
 import { toggleFavorite as toggleFavoriteAction } from "../../../features/favorites/favoritesSlice.ts";
 import {useDispatch} from "react-redux";
+import {MovieCardSkeleton} from "../Skeletons/MovieCardSkeleton.tsx";
 
 
 interface Movie {
@@ -269,9 +270,10 @@ export const SearchPage = () => {
                     />
                 </div>
 
-                <div className={s.loading}>
-                    <div className={s.loadingSpinner}></div>
-                    <p>Searching for "{urlQuery}"...</p>
+                <div className={s.moviesGrid}>
+                    {Array.from({ length: 12 }).map((_, index) => (
+                        <MovieCardSkeleton key={index} />
+                    ))}
                 </div>
             </div>
         );

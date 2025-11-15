@@ -292,14 +292,12 @@ export const CategoryMovies = () => {
                 ))}
             </div>
 
-            {/* Индикатор загрузки при пагинации */}
+            {/* Скелетоны при пагинации */}
             {currentLoading && currentMovies.length > 0 && (
-                <div className={s.loading}>
-                    <div className={s.skeletonGrid}>
-                        {Array.from({ length: 6 }).map((_, index) => (
-                            <MovieCardSkeleton key={index} />
-                        ))}
-                    </div>
+                <div className={s.skeletonGrid}>
+                    {Array.from({ length: 6 }).map((_, index) => (
+                        <MovieCardSkeleton key={index} />
+                    ))}
                 </div>
             )}
 
