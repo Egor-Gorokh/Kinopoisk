@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+/* eslint-disable react-refresh/only-export-components */
+
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 interface ThemeContextType {
     isDarkTheme: boolean;

@@ -1,15 +1,74 @@
 import s from './MovieDetails.module.css';
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import {
     useGetMovieDetailsQuery,
     useGetMovieCreditsQuery,
-    useGetMovieImagesQuery,
+  //  useGetMovieImagesQuery,
     useGetMovieRecommendationsQuery,
     useGetMovieVideosQuery
 } from '../../../features/movies/api/moviesApi.ts';
 import { toggleFavorite, selectIsFavorite } from "../../../features/favorites/favoritesSlice.ts";
+
+// Интерфейсы для типизации
+interface Genre {
+    id: number;
+    name: string;
+}
+
+interface Person {
+    id: number;
+    name: string;
+    job: string;
+    character: string;
+    profile_path?: string;
+}
+
+interface Video {
+    id: string;
+    key: string;
+    name: string;
+    type: string;
+    site: string;
+}
+
+/*interface Image {
+    file_path: string;
+}*/
+
+interface Movie {
+    id: number;
+    title: string;
+    original_title: string;
+    overview: string;
+    poster_path?: string;
+    backdrop_path?: string;
+    release_date: string;
+    vote_average: number;
+    runtime: number;
+    budget: number;
+    revenue: number;
+    genres: Genre[];
+}
+
+interface Credits {
+    cast: Person[];
+    crew: Person[];
+}
+
+/*interface Images {
+    backdrops: Image[];
+    posters: Image[];
+}*/
+
+interface Recommendations {
+    results: Movie[];
+}
+
+interface Videos {
+    results: Video[];
+}
 
 export const MovieDetails = () => {
     const { id } = useParams();
@@ -22,13 +81,13 @@ export const MovieDetails = () => {
 
     // Запросы для получения данных о фильме
     const { data: movie, isLoading: movieLoading, error: movieError } = useGetMovieDetailsQuery(movieId);
-    const { data: credits, isLoading: creditsLoading } = useGetMovieCreditsQuery(movieId);
-    const { data: images, isLoading: imagesLoading } = useGetMovieImagesQuery(movieId);
-    const { data: recommendations, isLoading: recommendationsLoading } = useGetMovieRecommendationsQuery(movieId);
-    const { data: videos, isLoading: videosLoading } = useGetMovieVideosQuery(movieId);
+    const { data: credits } = useGetMovieCreditsQuery(movieId);
+   // const { data: images } = useGetMovieImagesQuery(movieId);
+    const { data: recommendations } = useGetMovieRecommendationsQuery(movieId);
+    const { data: videos } = useGetMovieVideosQuery(movieId);
 
     // Проверяем есть ли трейлер
-    const trailer = videos?.results?.find(video =>
+    const trailer = (videos as Videos)?.results?.find((video: Video) =>
         video.type === 'Trailer' && video.site === 'YouTube'
     );
 
@@ -99,20 +158,25 @@ export const MovieDetails = () => {
         );
     }
 
-    const director = credits?.crew?.find(person => person.job === 'Director');
-    const mainCast = credits?.cast?.slice(0, 12) || [];
-    const backdrops = images?.backdrops?.slice(0, 10) || [];
-    const posters = images?.posters?.slice(0, 10) || [];
-    const recommendationMovies = recommendations?.results?.slice(0, 8) || [];
+    const typedMovie = movie as Movie;
+    const typedCredits = credits as Credits;
+   /* const typedImages = images as Images;*/
+    const typedRecommendations = recommendations as Recommendations;
+
+    const director = typedCredits?.crew?.find((person: Person) => person.job === 'Director');
+    const mainCast = typedCredits?.cast?.slice(0, 12) || [];
+ /*   const backdrops = typedImages?.backdrops?.slice(0, 10) || [];
+    const posters = typedImages?.posters?.slice(0, 10) || [];*/
+    const recommendationMovies = typedRecommendations?.results?.slice(0, 8) || [];
 
     return (
         <div className={s.movieDetails}>
             {/* Hero секция с бэкдропом и основной информацией */}
             <div className={s.movieHero}>
-                {movie.backdrop_path ? (
+                {typedMovie.backdrop_path ? (
                     <img
-                        src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
-                        alt={movie.title}
+                        src={`https://image.tmdb.org/t/p/w1280${typedMovie.backdrop_path}`}
+                        alt={typedMovie.title}
                         className={s.backdropImage}
                     />
                 ) : (
@@ -128,19 +192,19 @@ export const MovieDetails = () => {
                 <div className={s.heroContent}>
                     <div className={s.posterContainer}>
                         <img
-                            src={movie.poster_path
-                                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                            src={typedMovie.poster_path
+                                ? `https://image.tmdb.org/t/p/w500${typedMovie.poster_path}`
                                 : '/placeholder-poster.jpg'
                             }
-                            alt={movie.title}
+                            alt={typedMovie.title}
                             className={s.poster}
                         />
                     </div>
 
                     <div className={s.movieInfo}>
-                        <h1 className={s.movieTitle}>{movie.title}</h1>
-                        {movie.original_title !== movie.title && (
-                            <p className={s.movieOriginalTitle}>{movie.original_title}</p>
+                        <h1 className={s.movieTitle}>{typedMovie.title}</h1>
+                        {typedMovie.original_title !== typedMovie.title && (
+                            <p className={s.movieOriginalTitle}>{typedMovie.original_title}</p>
                         )}
 
                         <div className={s.actions}>
@@ -165,35 +229,35 @@ export const MovieDetails = () => {
                         <div className={s.movieMeta}>
                             <div className={s.metaItem}>
                                 <span className={s.metaLabel}>Release Date</span>
-                                <span className={s.metaValue}>{formatDate(movie.release_date)}</span>
+                                <span className={s.metaValue}>{formatDate(typedMovie.release_date)}</span>
                             </div>
 
                             <div className={s.metaItem}>
                                 <span className={s.metaLabel}>Rating</span>
                                 <div className={s.rating}>
                                     <div className={s.ratingStars}>
-                                        {renderStars(movie.vote_average)}
+                                        {renderStars(typedMovie.vote_average)}
                                     </div>
-                                    <span>{movie.vote_average.toFixed(1)}/10</span>
+                                    <span>{typedMovie.vote_average.toFixed(1)}/10</span>
                                 </div>
                             </div>
 
                             <div className={s.metaItem}>
                                 <span className={s.metaLabel}>Runtime</span>
-                                <span className={s.metaValue}>{formatRuntime(movie.runtime)}</span>
+                                <span className={s.metaValue}>{formatRuntime(typedMovie.runtime)}</span>
                             </div>
 
-                            {movie.budget > 0 && (
+                            {typedMovie.budget > 0 && (
                                 <div className={s.metaItem}>
                                     <span className={s.metaLabel}>Budget</span>
-                                    <span className={s.metaValue}>{formatCurrency(movie.budget)}</span>
+                                    <span className={s.metaValue}>{formatCurrency(typedMovie.budget)}</span>
                                 </div>
                             )}
 
-                            {movie.revenue > 0 && (
+                            {typedMovie.revenue > 0 && (
                                 <div className={s.metaItem}>
                                     <span className={s.metaLabel}>Revenue</span>
-                                    <span className={s.metaValue}>{formatCurrency(movie.revenue)}</span>
+                                    <span className={s.metaValue}>{formatCurrency(typedMovie.revenue)}</span>
                                 </div>
                             )}
 
@@ -206,14 +270,14 @@ export const MovieDetails = () => {
                         </div>
 
                         <div className={s.genres}>
-                            {movie.genres?.map(genre => (
+                            {typedMovie.genres?.map((genre: Genre) => (
                                 <span key={genre.id} className={s.genre}>
                                     {genre.name}
                                 </span>
                             ))}
                         </div>
 
-                        <p className={s.overview}>{movie.overview || 'No overview available.'}</p>
+                        <p className={s.overview}>{typedMovie.overview || 'No overview available.'}</p>
                     </div>
                 </div>
             </div>
@@ -225,7 +289,7 @@ export const MovieDetails = () => {
                     <section className={s.section}>
                         <h2 className={s.sectionTitle}>Cast</h2>
                         <div className={s.castGrid}>
-                            {mainCast.map(actor => (
+                            {mainCast.map((actor: Person) => (
                                 <div key={actor.id} className={s.castCard}>
                                     <img
                                         src={actor.profile_path
@@ -253,7 +317,7 @@ export const MovieDetails = () => {
                     <section className={s.section}>
                         <h2 className={s.sectionTitle}>Recommendations</h2>
                         <div className={s.recommendationsGrid}>
-                            {recommendationMovies.map(recommendation => (
+                            {recommendationMovies.map((recommendation: Movie) => (
                                 <div
                                     key={recommendation.id}
                                     className={s.recommendationCard}

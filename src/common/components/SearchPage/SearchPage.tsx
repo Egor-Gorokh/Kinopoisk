@@ -7,7 +7,7 @@ import { toggleFavorite as toggleFavoriteAction } from "../../../features/favori
 import {useDispatch} from "react-redux";
 import {MovieCardSkeleton} from "../Skeletons/MovieCardSkeleton.tsx";
 
-
+// Интерфейсы для API ответа
 interface Movie {
     id: number;
     title: string;
@@ -17,6 +17,24 @@ interface Movie {
     poster_path?: string;
     release_date: string;
 }
+
+interface ApiMovie {
+    id: number;
+    title: string;
+    original_title: string;
+    vote_average: number;
+    genre_ids: number[];
+    poster_path?: string;
+    release_date: string;
+}
+
+/*
+interface SearchResults {
+    results: ApiMovie[];
+    total_pages: number;
+    total_results: number;
+}
+*/
 
 interface Genre {
     id: number;
@@ -54,7 +72,9 @@ export const SearchPage = () => {
     const [movies, setMovies] = useState<Movie[]>([]);
 
     const isLoadingRef = useRef(false);
-    const scrollTimeoutRef = useRef<NodeJS.Timeout>();
+
+    // Исправление: используем number вместо NodeJS.Timeout для кроссплатформенности
+    const scrollTimeoutRef = useRef<number | null>(null);
     const lastSearchQueryRef = useRef('');
 
     // Берем поисковый запрос из URL параметров
@@ -75,7 +95,7 @@ export const SearchPage = () => {
     // Эффект для добавления новых данных
     useEffect(() => {
         if (searchResults?.results) {
-            const newMovies: Movie[] = searchResults.results.map(movie => ({
+            const newMovies: Movie[] = searchResults.results.map((movie: ApiMovie) => ({
                 id: movie.id,
                 title: movie.title,
                 original_title: movie.original_title,
@@ -123,12 +143,12 @@ export const SearchPage = () => {
         if (isLoadingRef.current) return;
 
         // Очищаем предыдущий таймаут
-        if (scrollTimeoutRef.current) {
+        if (scrollTimeoutRef.current !== null) {
             clearTimeout(scrollTimeoutRef.current);
         }
 
         // Устанавливаем новый таймаут для троттлинга
-        scrollTimeoutRef.current = setTimeout(() => {
+        scrollTimeoutRef.current = window.setTimeout(() => {
             const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
             // Загружаем когда до конца осталось 500px
@@ -143,7 +163,7 @@ export const SearchPage = () => {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            if (scrollTimeoutRef.current) {
+            if (scrollTimeoutRef.current !== null) {
                 clearTimeout(scrollTimeoutRef.current);
             }
         };
@@ -212,10 +232,11 @@ export const SearchPage = () => {
                             className={s.movieImg}
                             loading="lazy"
                         />
-                    ) : null}
-                    <div className={s.moviePlaceholder}>
-                        {movie.title}
-                    </div>
+                    ) : (
+                        <div className={s.moviePlaceholder}>
+                            {movie.title}
+                        </div>
+                    )}
                 </div>
 
                 <button

@@ -14,6 +14,29 @@ import { MovieCardSkeleton } from '../Skeletons/MovieCardSkeleton.tsx';
 
 type TabType = 'popular' | 'top-rated' | 'upcoming' | 'now-playing';
 
+interface Movie {
+    id: number;
+    title: string;
+    original_title: string;
+    vote_average: number;
+    poster_path?: string;
+    release_date: string;
+    genre_ids: number[];
+    overview: string;
+    backdrop_path?: string;
+    popularity: number;
+    vote_count: number;
+    adult: boolean;
+    video: boolean;
+}
+
+interface MoviesResponse {
+    results: Movie[];
+    total_pages: number;
+    total_results: number;
+    page: number;
+}
+
 export const CategoryMovies = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState<TabType>('popular');
@@ -24,7 +47,7 @@ export const CategoryMovies = () => {
         upcoming: 1,
         'now-playing': 1
     });
-    const [allMovies, setAllMovies] = useState<Record<TabType, any[]>>({
+    const [allMovies, setAllMovies] = useState<Record<TabType, Movie[]>>({
         popular: [],
         'top-rated': [],
         upcoming: [],
@@ -57,35 +80,35 @@ export const CategoryMovies = () => {
         switch (activeTab) {
             case 'popular':
                 return {
-                    data: popularMovies,
+                    data: popularMovies as MoviesResponse | undefined,
                     isLoading: popularLoading,
                     error: popularError,
                     currentPage: currentPages.popular
                 };
             case 'top-rated':
                 return {
-                    data: topRatedMovies,
+                    data: topRatedMovies as MoviesResponse | undefined,
                     isLoading: topRatedLoading,
                     error: topRatedError,
                     currentPage: currentPages['top-rated']
                 };
             case 'upcoming':
                 return {
-                    data: upcomingMovies,
+                    data: upcomingMovies as MoviesResponse | undefined,
                     isLoading: upcomingLoading,
                     error: upcomingError,
                     currentPage: currentPages.upcoming
                 };
             case 'now-playing':
                 return {
-                    data: nowPlayingMovies,
+                    data: nowPlayingMovies as MoviesResponse | undefined,
                     isLoading: nowPlayingLoading,
                     error: nowPlayingError,
                     currentPage: currentPages['now-playing']
                 };
             default:
                 return {
-                    data: popularMovies,
+                    data: popularMovies as MoviesResponse | undefined,
                     isLoading: popularLoading,
                     error: popularError,
                     currentPage: currentPages.popular

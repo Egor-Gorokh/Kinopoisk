@@ -1,9 +1,10 @@
 import s from './MoviesSection.module.css';
-import { useState } from 'react';
+//import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toggleFavorite as toggleFavoriteAction } from "../../../features/favorites/favoritesSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsFavorite } from "../../../features/favorites/favoritesSlice.ts";
+import type {JSX} from "react";
 
 interface Movie {
     id: number;
@@ -17,7 +18,7 @@ interface MoviesSectionProps {
     title: string;
     movies: Movie[];
     isLoading: boolean;
-    error: any;
+    error: unknown;
     viewMoreLink: string;
     showViewMore?: boolean;
 }

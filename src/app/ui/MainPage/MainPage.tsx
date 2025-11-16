@@ -12,6 +12,29 @@ import {
     useGetNowPlayingMoviesQuery
 } from '../../../features/movies/api/moviesApi.ts';
 
+interface Movie {
+    id: number;
+    title: string;
+    backdrop_path?: string;
+    poster_path?: string;
+    vote_average: number;
+    release_date: string;
+    overview: string;
+    genre_ids: number[];
+    original_title: string;
+    popularity: number;
+    vote_count: number;
+    adult: boolean;
+    video: boolean;
+}
+
+interface MoviesResponse {
+    results: Movie[];
+    total_pages: number;
+    total_results: number;
+    page: number;
+}
+
 export const MainPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [backgroundImage, setBackgroundImage] = useState('');
@@ -29,7 +52,7 @@ export const MainPage = () => {
     // Устанавливаем backdrop популярного фильма как фон
     useEffect(() => {
         if (popularMovies?.results && popularMovies.results.length > 0) {
-            const movieWithBackdrop = popularMovies.results.find(movie => movie.backdrop_path);
+            const movieWithBackdrop = popularMovies.results.find((movie: Movie) => movie.backdrop_path);
             if (movieWithBackdrop) {
                 const backdropUrl = `https://image.tmdb.org/t/p/w1280${movieWithBackdrop.backdrop_path}`;
                 setBackgroundImage(backdropUrl);
@@ -102,7 +125,7 @@ export const MainPage = () => {
             {/* Popular Movies */}
             <MoviesSection
                 title="Popular Movies"
-                movies={popularMovies?.results || []}
+                movies={(popularMovies as MoviesResponse)?.results || []}
                 isLoading={false}
                 error={popularError}
                 viewMoreLink="/categoryMovies?tab=popular"
@@ -111,7 +134,7 @@ export const MainPage = () => {
             {/* Top Rated Movies */}
             <MoviesSection
                 title="Top Rated Movies"
-                movies={topRatedMovies?.results || []}
+                movies={(topRatedMovies as MoviesResponse)?.results || []}
                 isLoading={false}
                 error={topRatedError}
                 viewMoreLink="/categoryMovies?tab=top-rated"
@@ -120,7 +143,7 @@ export const MainPage = () => {
             {/* Upcoming Movies */}
             <MoviesSection
                 title="Upcoming Movies"
-                movies={upcomingMovies?.results || []}
+                movies={(upcomingMovies as MoviesResponse)?.results || []}
                 isLoading={false}
                 error={upcomingError}
                 viewMoreLink="/categoryMovies?tab=upcoming"
@@ -129,7 +152,7 @@ export const MainPage = () => {
             {/* Now Playing Movies */}
             <MoviesSection
                 title="Now Playing Movies"
-                movies={nowPlayingMovies?.results || []}
+                movies={(nowPlayingMovies as MoviesResponse)?.results || []}
                 isLoading={false}
                 error={nowPlayingError}
                 viewMoreLink="/categoryMovies?tab=now-playing"

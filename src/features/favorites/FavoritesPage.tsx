@@ -5,6 +5,7 @@ import { selectFavoriteIds, toggleFavorite } from './favoritesSlice';
 import { useGetMovieDetailsQuery } from '../movies/api/moviesApi';
 import { useDispatch } from 'react-redux';
 import s from './FavoritesPage.module.css';
+import type {JSX} from "react";
 
 export const FavoritesPage = () => {
     const favoriteIds = useSelector(selectFavoriteIds);

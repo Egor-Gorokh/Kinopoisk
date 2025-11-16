@@ -18,6 +18,17 @@ interface Movie {
     popularity: number;
 }
 
+interface ApiMovie {
+    id: number;
+    title: string;
+    original_title: string;
+    vote_average: number;
+    genre_ids: number[];
+    poster_path?: string;
+    release_date: string;
+    popularity: number;
+}
+
 interface Genre {
     id: number;
     name: string;
@@ -79,7 +90,8 @@ export const FilteredMovies = () => {
 
     const sliderRef = useRef<HTMLDivElement>(null);
     const isLoadingRef = useRef(false);
-    const scrollTimeoutRef = useRef<NodeJS.Timeout>();
+    // Исправление: используем number вместо NodeJS.Timeout
+    const scrollTimeoutRef = useRef<number | null>(null);
     const lastFiltersRef = useRef<string>('');
 
     // Используем debounce для рейтинга с задержкой 200ms
@@ -96,7 +108,7 @@ export const FilteredMovies = () => {
     // Эффект для добавления новых данных при изменении moviesData
     useEffect(() => {
         if (moviesData?.results && moviesData.results.length > 0) {
-            const newMovies: Movie[] = moviesData.results.map(movie => ({
+            const newMovies: Movie[] = moviesData.results.map((movie: ApiMovie) => ({
                 id: movie.id,
                 title: movie.title,
                 original_title: movie.original_title,
@@ -195,12 +207,12 @@ export const FilteredMovies = () => {
         if (isLoadingRef.current) return;
 
         // Очищаем предыдущий таймаут
-        if (scrollTimeoutRef.current) {
+        if (scrollTimeoutRef.current !== null) {
             clearTimeout(scrollTimeoutRef.current);
         }
 
         // Устанавливаем новый таймаут для троттлинга
-        scrollTimeoutRef.current = setTimeout(() => {
+        scrollTimeoutRef.current = window.setTimeout(() => {
             const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
             // Проверяем, достигли ли мы конца страницы (за 500px до конца)
@@ -215,7 +227,7 @@ export const FilteredMovies = () => {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            if (scrollTimeoutRef.current) {
+            if (scrollTimeoutRef.current !== null) {
                 clearTimeout(scrollTimeoutRef.current);
             }
         };
