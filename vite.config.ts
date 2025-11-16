@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-// @ts-ignore - временно игнорируем ошибку TypeScript
+
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
